@@ -24,9 +24,9 @@ button,input{font:inherit}
 .screen,.pass{width:100%;min-height:100dvh;background:#fff}
 .hidden{display:none!important}
 .header{height:52px;min-height:52px;background:#242424;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font-size:17px;font-weight:500;letter-spacing:0.2px;z-index:10}
-.header .x{position:absolute;right:16px;color:#aaa;font-size:28px;font-weight:300;line-height:1;cursor:pointer}
-.header .back{position:absolute;left:16px;color:#fff;font-size:24px;font-weight:300;line-height:1;cursor:pointer}
-.header .history{position:absolute;right:16px;color:#fff;font-size:14.5px;font-weight:400;line-height:1;cursor:pointer}
+.header .x{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:#aaa;font-size:28px;font-weight:300;line-height:1;cursor:pointer;padding:8px 12px;-webkit-tap-highlight-color:transparent}
+.header .back{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#fff;font-size:24px;font-weight:300;line-height:1;cursor:pointer;padding:8px 12px;-webkit-tap-highlight-color:transparent}
+.header .history{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#fff;font-size:14.5px;font-weight:400;line-height:1;cursor:pointer;padding:8px 6px;-webkit-tap-highlight-color:transparent}
 
 
 /* Profile setup */
@@ -503,7 +503,7 @@ async function exitFullscreen(){
   }catch(e){}
 }
 function showForm(){
- app.innerHTML=`<div class="screen"><div class="header">Fill Profile</div><div class="form-wrap">
+ app.innerHTML=`<div class="screen"><div class="header">${profile?'<span class="back" onclick="showCoupon()">←</span>':''}Fill Profile</div><div class="form-wrap">
  <div class="notice">✓ Fill this once. Your profile is saved on this device and reused next time.</div>
  <div class="photo-preview"><img id="photoPreview" src="${profile?.photo||DEFAULT_PHOTO}" onerror="this.style.display='none'"></div>
  <div class="field"><label>Profile Photo</label><input id="photo" type="file" accept="image/*"></div>
@@ -643,7 +643,21 @@ async function showCoupon(){
  </div>
  </div></div>`;
  document.querySelectorAll('.meal').forEach(b=>b.onclick=async()=>{selectedMeal=b.dataset.meal;try{const a=document.getElementById('scanBeep');if(a){a.load();const p=a.play();if(p)p.then(()=>{a.pause();a.currentTime=0}).catch(()=>{})}}catch(e){}await enterFullscreen();showScanner()});
- document.getElementById('profilePhotoAccess').ondblclick=showForm;
+ let profileTapCount = 0, profileTapTimer = null;
+ const profileCard = document.getElementById('profilePhotoAccess');
+ if (profileCard) {
+  profileCard.ondblclick = null;
+  profileCard.onclick = () => {
+   profileTapCount++;
+   if (profileTapTimer) clearTimeout(profileTapTimer);
+   if (profileTapCount >= 5) {
+    profileTapCount = 0;
+    showForm();
+   } else {
+    profileTapTimer = setTimeout(() => { profileTapCount = 0; }, 2200);
+   }
+  };
+ }
  document.getElementById('rateUsBtn').onclick=openFeedback;
  document.getElementById('feedbackClose').onclick=closeFeedback;
  document.querySelectorAll('.feedback-star').forEach(star=>star.onclick=()=>selectFeedbackRating(Number(star.dataset.rating)));
@@ -780,7 +794,7 @@ function handleQRError(img){
     img.src=c.toDataURL('image/png');
   }catch(e){}
 }
-function showPass(){stopCamera();if(passTimer){clearInterval(passTimer);passTimer=null}if(passReturnTimer){clearTimeout(passReturnTimer);passReturnTimer=null}profile=getProfile();const now=new Date();const date=now.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'});const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});const verificationCode=String(Math.floor(10000000+Math.random()*90000000));app.innerHTML=`<div class="pass"><div class="header"><span class="back" onclick="showCoupon()">←</span>Mess Pass<span class="x">×</span></div><div class="pass-card"><div class="pass-top"><div class="badge" id="passCountdown">30</div><div class="pass-grid"><div><div class="frame"><img src="${profile.photo}"></div><div class="pass-text">${esc(profile.id)}</div><div class="pass-sub">${esc(profile.name)}</div></div><div><div class="frame qr-frame"><img src="${makeQR()}" alt="QR" onload="cacheQR(this)" onerror="handleQRError(this)"></div><div class="pass-text">${selectedMeal}</div><div class="pass-sub">${esc(profile.mess)}</div></div></div></div><div class="info"><div style="margin-bottom:5px">${esc(profile.program)}</div><div style="font-weight:700">Your Assigned Mess - ${esc(profile.mess)}</div></div><div class="date-row"><span>${date}</span><span>${time}</span></div><div class="approved">Meal Approved</div><div class="rate-pass"><div class="rate"><span class="rate-star">★</span> RATE US</div></div><div class="video-strip" style="--accent:${profile.accent}"><div class="video-box"><video src="${EMBEDDED_ACCEPTED_VIDEO}" autoplay loop muted playsinline></video></div></div><div class="footer"><div><div class="gray">Father's Name</div><div class="value">${esc(profile.father)}</div></div><div><div class="gray">Mother's Name</div><div class="value">${esc(profile.mother)}</div></div><div><div class="gray">Program</div><div class="value">${esc(profile.program)}</div></div><div><div class="gray">Hostel</div><div class="value">${esc(profile.hostel)}</div></div><div class="verification-code"><span class="label">Verification Code</span><span class="number">${verificationCode}</span></div></div></div></div>`;
+function showPass(){stopCamera();if(passTimer){clearInterval(passTimer);passTimer=null}if(passReturnTimer){clearTimeout(passReturnTimer);passReturnTimer=null}profile=getProfile();const now=new Date();const date=now.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'});const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});const verificationCode=String(Math.floor(10000000+Math.random()*90000000));app.innerHTML=`<div class="pass"><div class="header"><span class="back" onclick="showCoupon()">←</span>Mess Pass<span class="x" onclick="showCoupon()">×</span></div><div class="pass-card"><div class="pass-top"><div class="badge" id="passCountdown">30</div><div class="pass-grid"><div><div class="frame"><img src="${profile.photo}"></div><div class="pass-text">${esc(profile.id)}</div><div class="pass-sub">${esc(profile.name)}</div></div><div><div class="frame qr-frame"><img src="${makeQR()}" alt="QR" onload="cacheQR(this)" onerror="handleQRError(this)"></div><div class="pass-text">${selectedMeal}</div><div class="pass-sub">${esc(profile.mess)}</div></div></div></div><div class="info"><div style="margin-bottom:5px">${esc(profile.program)}</div><div style="font-weight:700">Your Assigned Mess - ${esc(profile.mess)}</div></div><div class="date-row"><span>${date}</span><span>${time}</span></div><div class="approved">Meal Approved</div><div class="rate-pass"><div class="rate"><span class="rate-star">★</span> RATE US</div></div><div class="video-strip" style="--accent:${profile.accent}"><div class="video-box"><video src="${EMBEDDED_ACCEPTED_VIDEO}" autoplay loop muted playsinline></video></div></div><div class="footer"><div><div class="gray">Father's Name</div><div class="value">${esc(profile.father)}</div></div><div><div class="gray">Mother's Name</div><div class="value">${esc(profile.mother)}</div></div><div><div class="gray">Program</div><div class="value">${esc(profile.program)}</div></div><div><div class="gray">Hostel</div><div class="value">${esc(profile.hostel)}</div></div><div class="verification-code"><span class="label">Verification Code</span><span class="number">${verificationCode}</span></div></div></div></div>`;
  let remaining=30;
  passTimer=setInterval(()=>{remaining--;const badge=document.getElementById('passCountdown');if(!badge){clearInterval(passTimer);passTimer=null;return}badge.textContent=remaining;if(remaining<=0){clearInterval(passTimer);passTimer=null;passReturnTimer=setTimeout(()=>showCoupon(),500)}},1000)}
 profile=getProfile();if(profile)showCoupon();else showForm();
