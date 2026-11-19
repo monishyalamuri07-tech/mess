@@ -1,4 +1,4 @@
-const CACHE = "mess-pass-v25";
+const CACHE = "mess-pass-v26";
 
 const ASSETS = [
     "./",
