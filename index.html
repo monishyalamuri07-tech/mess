@@ -12,18 +12,21 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mess Pass">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#111;font-family:Montserrat,Arial,sans-serif;color:#000;overflow:hidden}
+html,body{margin:0;padding:0;background:#111;font-family:'Roboto',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#000;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 body{min-height:100dvh}
 button,input{font:inherit}
-.app{width:100%;max-width:430px;height:100dvh;min-height:100dvh;margin:0 auto;background:#fff;overflow:hidden}
-.screen,.coupon,.pass{width:100%;height:100dvh;min-height:100dvh;overflow:hidden;background:#fff}
+.app{width:100%;max-width:430px;min-height:100dvh;margin:0 auto;background:#fff;position:relative}
+.screen,.pass{width:100%;min-height:100dvh;background:#fff}
 .hidden{display:none!important}
-.header{height:52px;min-height:52px;background:#262626;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font-size:19px;font-weight:700;z-index:10}
-.header .x{position:absolute;right:16px;color:#aaa;font-size:31px;font-weight:300;line-height:1;cursor:pointer}
-.header .back{position:absolute;left:16px;color:#fff;font-size:30px;font-weight:300;line-height:1;cursor:pointer}
-.header .history{position:absolute;right:16px;color:#fff;font-size:17px;font-weight:500;line-height:1;cursor:pointer}
+.header{height:52px;min-height:52px;background:#242424;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;font-size:17px;font-weight:500;letter-spacing:0.2px;z-index:10}
+.header .x{position:absolute;right:16px;color:#aaa;font-size:28px;font-weight:300;line-height:1;cursor:pointer}
+.header .back{position:absolute;left:16px;color:#fff;font-size:24px;font-weight:300;line-height:1;cursor:pointer}
+.header .history{position:absolute;right:16px;color:#fff;font-size:14.5px;font-weight:400;line-height:1;cursor:pointer}
 
 
 /* Profile setup */
@@ -37,100 +40,145 @@ button,input{font:inherit}
 .field input::file-selector-button{background:#666;color:#fff;border:0;padding:9px 11px;margin-right:9px;border-radius:4px}
 .save{width:100%;height:56px;border:0;border-radius:7px;background:#198f5b;color:#fff;font-size:17px;font-weight:800;margin-top:4px;cursor:pointer}.small{font-size:12px;color:#777;margin-top:6px;line-height:1.4}
 
-/* Coupon: one-screen layout, stretched like the reference */
+/* Coupon screen: matches reference device layout & fonts perfectly */
 .coupon{
-    background:#e7e7e7;
-    height:calc(100dvh - 124px);
-    min-height:0;
-    overflow:hidden;
-    padding:0;
+    background:#e8e8e8;
+    min-height:100dvh;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    box-sizing:border-box;
+    padding-bottom:24px;
 }
-.coupon .header{height:124px;min-height:124px;}
 .coupon-shell{
     background:#fff;
-    height:100%;
-    margin:0 16px;
-    border:1px solid #d7d7d7;
-    border-top:0;
-    box-shadow:0 2px 5px rgba(0,0,0,.22);
-    overflow:hidden;
-    padding:8px 0 20px;
+    margin:0 14px;
+    border:1px solid #d5d5d5;
+    border-top:none;
+    border-radius:0 0 16px 16px;
+    box-shadow:0 3px 8px rgba(0,0,0,.15);
+    padding:8px 10px 22px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
 }
 .coupon-card{
-    flex:0 0 auto;
     margin:0;
-    background:linear-gradient(105deg,#ff8075,#ffd477);
-    border-radius:9px;
-    padding:14px 20px 31px;
-    box-shadow:0 4px 9px #999;
+    background:linear-gradient(135deg,#ff7b6b 0%,#ffc468 100%);
+    border-radius:12px;
+    padding:12px 14px 16px;
+    box-shadow:0 3px 8px rgba(0,0,0,.12);
+    box-sizing:border-box;
 }
 .coupon-photo{
-    width:min(29vw,120px);
-    height:min(29vw,120px);
-    border-radius:15px;
+    width:94px;
+    height:94px;
+    border-radius:12px;
     overflow:hidden;
-    margin:0 auto 7px;
-    background:#ddd
+    margin:0 auto 8px;
+    background:#e0e0e0;
 }
-.coupon-photo img{width:100%;height:100%;object-fit:cover}
+.coupon-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
 .nameid{
     text-align:center;
-    font-size:17px;
-    line-height:1.2;
-    margin-bottom:29px
+    font-size:15px;
+    font-weight:500;
+    line-height:1.25;
+    margin-bottom:12px;
+    color:#1f1f1f;
+    letter-spacing:0.1px;
 }
 .detail{
-    font-size:13px;
-    line-height:1.25;
-    margin:0 0 15px
+    font-size:12.5px;
+    line-height:1.28;
+    margin:0 0 7px;
+    color:#2c2c2c;
+    text-align:left;
 }
 .detail strong{
     display:block;
-    margin-bottom:2px;
-    font-size:13px
+    margin-bottom:1px;
+    font-size:12.5px;
+    font-weight:600;
+    color:#1a1a1a;
 }
 .detail:last-child{margin-bottom:0}
 
 .instruction{
     text-align:center;
-    font-size:clamp(17px,5vw,23px);
-    line-height:1.2;
-    padding:40px 20px 14px
+    font-size:18px;
+    font-weight:400;
+    line-height:1.32;
+    padding:16px 10px 10px;
+    color:#1a1a1a;
 }
 .rate{
-    display:block;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
     text-align:center;
-    margin:0 auto 32px;
-    border:2px solid #7c1d2c;
-    color:#111;
+    margin:0 auto 16px;
+    border:1.5px solid #6c1a26;
+    color:#2c1216;
     background:#fff;
-    border-radius:8px;
-    padding:4px 14px;
-    font-size:14px;
+    border-radius:6px;
+    padding:3.5px 14px;
+    font-size:12.5px;
     font-weight:700;
-    width:max-content
+    letter-spacing:0.3px;
+    width:max-content;
+    cursor:pointer;
+}
+.rate-star{
+    color:#d9a726;
+    font-size:13px;
+    line-height:1;
 }
 .meal-grid{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:16px 14px;
-    padding:0 18px;
+    gap:12px 14px;
+    padding:0 6px;
     margin:0 auto;
-    max-width:360px
+    width:100%;
+    max-width:340px;
+    box-sizing:border-box;
 }
 .meal{
-    height:54px;
-    border:0;
-    border-radius:9px;
-    background:linear-gradient(105deg,#ff8075,#ffd477);
-    box-shadow:0 5px 8px #888;
-    font-size:16px;
-    color:#000;
+    height:46px;
+    border:none;
+    border-radius:7px;
+    background:linear-gradient(105deg,#ff8272 0%,#ffcf71 100%);
+    box-shadow:0 3px 6px rgba(0,0,0,.18);
+    font-size:15px;
+    color:#3d1519;
     font-weight:500;
-    cursor:pointer
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .08s ease, filter .08s ease;
 }
-.meal span{margin-left:7px}
-.meal:nth-child(3){grid-column:1/2}
+.meal:active{
+    transform:scale(0.98);
+    filter:brightness(0.96);
+}
+.meal span{
+    margin-left:6px;
+    font-size:15px;
+    font-weight:400;
+}
+.meal:nth-child(3){
+    grid-column:1 / 2;
+}
 
 /* Mess pass: intentionally scrollable, matching the larger original pass layout */
 .pass{background:#e7e7e7;min-height:100dvh;height:100dvh;overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:18px}
@@ -138,8 +186,9 @@ button,input{font:inherit}
 .pass-top{padding:68px 15px 18px;position:relative}.badge{position:absolute;right:12px;top:10px;width:31px;height:31px;border-radius:50%;background:#b3b3b3;display:flex;align-items:center;justify-content:center;font-weight:800}
 .pass-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;text-align:center}.frame{border:1px solid #000;padding:12px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.5)}.frame img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
 .pass-text{font-weight:800;font-size:15px;margin-top:8px;line-height:1.4;text-shadow:1px 2px 4px rgba(0,0,0,.35)}.pass-sub{font-weight:700;font-size:14px;margin-top:2px;line-height:1.4}.qr-frame{padding:10px}.qr-frame img{background:#fff}
-.info{text-align:center;font-size:14px;line-height:1.6;padding:22px 15px 8px}.date-row{display:flex;justify-content:space-between;padding:5px 35px;font-size:18px;font-weight:800;margin:15px 0 18px}.approved{font-family:Arial,sans-serif;text-align:center;color:#62c354;font-size:28px;font-weight:800;margin:18px 0 14px;text-shadow:0 0 10px rgba(98,195,84,.4)}
-.rate-pass{text-align:center}.rate-pass .rate{margin-bottom:25px}.video-strip{background:var(--accent,#062506);padding:25px}.video-box{background:#fff;width:100%;aspect-ratio:1;overflow:hidden;display:flex;align-items:center;justify-content:center}.video-box video{width:100%;height:100%;object-fit:contain;background:#fff}
+.info{text-align:center;font-size:14px;line-height:1.6;padding:22px 15px 8px}.date-row{display:flex;justify-content:space-between;padding:5px 35px;font-size:18px;font-weight:800;margin:15px 0 18px}.approved{font-family:inherit;text-align:center;color:#62c354;font-size:28px;font-weight:800;margin:18px 0 14px;text-shadow:0 0 10px rgba(98,195,84,.4)}
+.rate-pass{text-align:center}.rate-pass .rate{margin-bottom:25px}
+.video-strip{background:var(--accent,#062506);padding:25px}.video-box{background:#fff;width:100%;aspect-ratio:1;overflow:hidden;display:flex;align-items:center;justify-content:center}.video-box video{width:100%;height:100%;object-fit:contain;background:#fff}
 .footer{padding:25px;background:#fff}.gray{color:#9a9a9a;font-size:14px;font-weight:600;margin-top:22px}.value{color:#000;font-size:15px;font-weight:600;margin-top:6px;line-height:1.4}.verification-code { margin: 30px 0 4px; border: 2px solid #222; border-radius: 14px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 17px; font-weight: 700; background: #fff; box-sizing: border-box; }.verification-code .label { font-weight: 700; }.verification-code .number { font-size: 18px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
 /* Camera scanner */
 .scanner{width:100%;height:100dvh;background:#101010;min-height:100dvh;color:#fff;position:relative;overflow:hidden}
@@ -151,15 +200,16 @@ button,input{font:inherit}
 .scanner-title,.scanner-status,.camera-denied{display:none}
 @keyframes lineBlink{0%,38%{opacity:1}39%,100%{opacity:0}}
 @media(max-width:360px){
-    .coupon-shell{margin-left:10px;margin-right:10px}
-    .coupon-card{padding-left:14px;padding-right:14px}
-    .coupon-photo{width:120px;height:120px}
-    .detail{font-size:12px;margin-bottom:11px}
-    .detail strong{font-size:12px}
-    .meal-grid{padding-left:14px;padding-right:14px;gap:14px 10px}
-    .meal{height:54px;font-size:16px}
-    .instruction{font-size:16px;padding-top:28px}
-    .rate{font-size:13px;margin-bottom:24px}
+    .coupon-shell{margin-left:8px;margin-right:8px;padding-left:8px;padding-right:8px}
+    .coupon-card{padding:10px 12px 14px}
+    .coupon-photo{width:86px;height:86px}
+    .nameid{font-size:14px;margin-bottom:10px}
+    .detail{font-size:11.5px;margin-bottom:6px}
+    .detail strong{font-size:11.5px}
+    .meal-grid{gap:10px 10px;padding:0 2px}
+    .meal{height:44px;font-size:14px}
+    .instruction{font-size:16px;padding:12px 6px 8px}
+    .rate{font-size:12px;margin-bottom:12px}
 }
 
 /* Feedback modal */
@@ -518,8 +568,8 @@ async function showCoupon(){
  profile=getProfile();if(!profile){showForm();return}
  app.innerHTML=`<div class="coupon"><div class="header"><span class="back" onclick="showCoupon()">←</span>Mess Coupon<span class="history">Meal History</span></div><div class="coupon-shell">
  <div class="coupon-card" id="profilePhotoAccess"><div class="coupon-photo"><img src="${profile.photo}" alt="Profile"></div><div class="nameid">${esc(profile.name)} ${esc(profile.id)}</div><div class="detail"><strong>Father's Name</strong>${esc(profile.father)}</div><div class="detail"><strong>Mother's Name</strong>${esc(profile.mother)}</div><div class="detail"><strong>Program Name</strong>${esc(profile.program)}</div><div class="detail"><strong>Hostel</strong>${esc(profile.hostel)}</div></div>
- <div class="instruction">Tap on the meal name to scan<br>and avail food.</div><button class="rate" id="rateUsBtn" type="button">⭐ RATE US</button>
- <div class="meal-grid"><button class="meal" data-meal="Breakfast">Breakfast <span>→</span></button><button class="meal" data-meal="Lunch">Lunch <span>→</span></button><button class="meal" data-meal="Dinner">Dinner <span>→</span></button></div>
+ <div class="instruction">Tap on the meal name to scan<br>and avail food.</div><button class="rate" id="rateUsBtn" type="button"><span class="rate-star">★</span> RATE US</button>
+ <div class="meal-grid"><button class="meal" data-meal="Breakfast">BreakFast <span>→</span></button><button class="meal" data-meal="Lunch">Lunch <span>→</span></button><button class="meal" data-meal="Dinner">Dinner <span>→</span></button></div>
  <div class="feedback-backdrop" id="feedbackModal">
    <div class="feedback-modal">
      <div class="feedback-header"><div class="feedback-grabber"></div>Feedback<button class="feedback-close" id="feedbackClose" type="button">×</button></div>
@@ -730,7 +780,7 @@ function handleQRError(img){
     img.src=c.toDataURL('image/png');
   }catch(e){}
 }
-function showPass(){stopCamera();if(passTimer){clearInterval(passTimer);passTimer=null}if(passReturnTimer){clearTimeout(passReturnTimer);passReturnTimer=null}profile=getProfile();const now=new Date();const date=now.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'});const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});const verificationCode=String(Math.floor(10000000+Math.random()*90000000));app.innerHTML=`<div class="pass"><div class="header"><span class="back" onclick="showCoupon()">←</span>Mess Pass<span class="x">×</span></div><div class="pass-card"><div class="pass-top"><div class="badge" id="passCountdown">30</div><div class="pass-grid"><div><div class="frame"><img src="${profile.photo}"></div><div class="pass-text">${esc(profile.id)}</div><div class="pass-sub">${esc(profile.name)}</div></div><div><div class="frame qr-frame"><img src="${makeQR()}" alt="QR" onload="cacheQR(this)" onerror="handleQRError(this)"></div><div class="pass-text">${selectedMeal}</div><div class="pass-sub">${esc(profile.mess)}</div></div></div></div><div class="info"><div style="margin-bottom:5px">${esc(profile.program)}</div><div style="font-weight:700">Your Assigned Mess - ${esc(profile.mess)}</div></div><div class="date-row"><span>${date}</span><span>${time}</span></div><div class="approved">Meal Approved</div><div class="rate-pass"><div class="rate">⭐ RATE US</div></div><div class="video-strip" style="--accent:${profile.accent}"><div class="video-box"><video src="${EMBEDDED_ACCEPTED_VIDEO}" autoplay loop muted playsinline></video></div></div><div class="footer"><div><div class="gray">Father's Name</div><div class="value">${esc(profile.father)}</div></div><div><div class="gray">Mother's Name</div><div class="value">${esc(profile.mother)}</div></div><div><div class="gray">Program</div><div class="value">${esc(profile.program)}</div></div><div><div class="gray">Hostel</div><div class="value">${esc(profile.hostel)}</div></div><div class="verification-code"><span class="label">Verification Code</span><span class="number">${verificationCode}</span></div></div></div></div>`;
+function showPass(){stopCamera();if(passTimer){clearInterval(passTimer);passTimer=null}if(passReturnTimer){clearTimeout(passReturnTimer);passReturnTimer=null}profile=getProfile();const now=new Date();const date=now.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'});const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});const verificationCode=String(Math.floor(10000000+Math.random()*90000000));app.innerHTML=`<div class="pass"><div class="header"><span class="back" onclick="showCoupon()">←</span>Mess Pass<span class="x">×</span></div><div class="pass-card"><div class="pass-top"><div class="badge" id="passCountdown">30</div><div class="pass-grid"><div><div class="frame"><img src="${profile.photo}"></div><div class="pass-text">${esc(profile.id)}</div><div class="pass-sub">${esc(profile.name)}</div></div><div><div class="frame qr-frame"><img src="${makeQR()}" alt="QR" onload="cacheQR(this)" onerror="handleQRError(this)"></div><div class="pass-text">${selectedMeal}</div><div class="pass-sub">${esc(profile.mess)}</div></div></div></div><div class="info"><div style="margin-bottom:5px">${esc(profile.program)}</div><div style="font-weight:700">Your Assigned Mess - ${esc(profile.mess)}</div></div><div class="date-row"><span>${date}</span><span>${time}</span></div><div class="approved">Meal Approved</div><div class="rate-pass"><div class="rate"><span class="rate-star">★</span> RATE US</div></div><div class="video-strip" style="--accent:${profile.accent}"><div class="video-box"><video src="${EMBEDDED_ACCEPTED_VIDEO}" autoplay loop muted playsinline></video></div></div><div class="footer"><div><div class="gray">Father's Name</div><div class="value">${esc(profile.father)}</div></div><div><div class="gray">Mother's Name</div><div class="value">${esc(profile.mother)}</div></div><div><div class="gray">Program</div><div class="value">${esc(profile.program)}</div></div><div><div class="gray">Hostel</div><div class="value">${esc(profile.hostel)}</div></div><div class="verification-code"><span class="label">Verification Code</span><span class="number">${verificationCode}</span></div></div></div></div>`;
  let remaining=30;
  passTimer=setInterval(()=>{remaining--;const badge=document.getElementById('passCountdown');if(!badge){clearInterval(passTimer);passTimer=null;return}badge.textContent=remaining;if(remaining<=0){clearInterval(passTimer);passTimer=null;passReturnTimer=setTimeout(()=>showCoupon(),500)}},1000)}
 profile=getProfile();if(profile)showCoupon();else showForm();
