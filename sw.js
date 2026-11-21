@@ -1,10 +1,9 @@
-const CACHE = "mess-pass-v30";
+const CACHE = "mess-pass-v31";
 
 const ASSETS = [
     "./",
     "./index.html",
     "./manifest.json",
-    "./sw.js",
     "./student.jpg",
     "./sounds/beep_sound_trimmed.mp3",
     "./icons/icon-192.png",
@@ -32,29 +31,35 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
     if (event.request.method !== "GET") return;
-    
+
+    // For HTML navigation, ALWAYS use Network-First to ensure mobile devices get latest updates
+    if (event.request.mode === "navigate") {
+        event.respondWith(
+            fetch(event.request)
+                .then(networkResponse => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const clone = networkResponse.clone();
+                        caches.open(CACHE).then(cache => cache.put(event.request, clone));
+                    }
+                    return networkResponse;
+                })
+                .catch(() => caches.match(event.request).then(cached => cached || caches.match("./index.html")))
+        );
+        return;
+    }
+
+    // For other assets, serve cached or fetch & cache
     event.respondWith(
         caches.match(event.request).then(cached => {
-            if (cached) {
-                fetch(event.request).then(networkResponse => {
-                    if (networkResponse && networkResponse.status === 200) {
-                        caches.open(CACHE).then(cache => cache.put(event.request, networkResponse));
-                    }
-                }).catch(() => {});
-                return cached;
-            }
-            
-            return fetch(event.request).then(networkResponse => {
+            const fetchPromise = fetch(event.request).then(networkResponse => {
                 if (networkResponse && networkResponse.status === 200) {
                     const clone = networkResponse.clone();
                     caches.open(CACHE).then(cache => cache.put(event.request, clone));
                 }
                 return networkResponse;
-            }).catch(() => {
-                if (event.request.mode === 'navigate') {
-                    return caches.match("./index.html");
-                }
-            });
+            }).catch(() => {});
+
+            return cached || fetchPromise;
         })
     );
 });
